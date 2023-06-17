@@ -2,17 +2,20 @@ import { useState, useEffect } from "react"
 import { createStage } from "../stage"
 import { randomTetromino } from "../component/block/block"
 
-export default function useStage(position) {
+type Position = {
+  [key: string]: number
+}
+
+export default function useStage(position: Position) {
   const [stage, setStage] = useState(createStage())
   const [block, setBlock] = useState(randomTetromino())
 
-
   useEffect(()=>{
 
-    const he = prevStage => {
+    const he = (prevStage) => {
       // First flush the stage
       const newStage = prevStage.map((row: number[]) =>
-        row.map((cell: any) => (cell[1] === "clear" ? [0, "clear"] : cell))
+        row.map((cell) => (cell[1] === "clear" ? [0, "clear"] : cell))
       );
 
       // Then draw the tetromino
@@ -24,7 +27,9 @@ export default function useStage(position) {
         });
       });
 
-      
+      if(null){
+        setBlock(randomTetromino());
+      }
 
       return newStage;
     };
