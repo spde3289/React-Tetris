@@ -15,7 +15,6 @@ export default function Game() {
   },[])
 
   const handleKey = (e : KeyboardEvent): void => {
-    console.log(e.code)
     if (e.code === "ArrowLeft") { // 왼쪽 화살표
       setPosition((prev) => ({ ...prev, x: prev.x - 1 }));
     } else if (e.code === "ArrowRight") { // 오른쪽 화살표
@@ -29,7 +28,7 @@ export default function Game() {
     <>
     <Container>
       <Padding>
-        {stage.map((line) => line.map((row, idx) => <Cell type={row[0]} key={idx} /> ) )}
+        {stage.map((line) => line.map((row, idx) => <Cell type={row} key={idx} /> ) )}
       </Padding>
     </Container>
     </>

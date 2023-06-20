@@ -7,22 +7,21 @@ type Position = {
 }
 
 export default function useStage(position: Position) {
-  const [stage, setStage] = useState(createStage())
+  const [stage, setStage] = useState<number[][]>(createStage())
   const [block, setBlock] = useState(randomTetromino())
-
+  console.log(stage)
   useEffect(()=>{
-
-    const he = (prevStage) => {
-      // First flush the stage
+    const heandleStage = (prevStage: number[][]): number[][] => {
+      // 테트리스 판 생성
       const newStage = prevStage.map((row: number[]) =>
-        row.map((cell) => (cell[1] === "clear" ? [0, "clear"] : cell))
+        row.map((cell) => (cell  ? 0 : cell))
       );
 
-      // Then draw the tetromino
+      // 블록 생성
       block.shape.forEach((row: number[] , y: number) => {
         row.forEach((val, x) => {
           if (val !== 0) {
-            newStage[y + position.y][x + position.x] = [val, "clear"];
+            newStage[y + position.y][x + position.x] = val;
           }
         });
       });
@@ -34,7 +33,7 @@ export default function useStage(position: Position) {
       return newStage;
     };
 
-    setStage(pre => he(pre))
+    setStage((pre:any) => heandleStage(pre))
 
   },[position])
 
