@@ -1,34 +1,20 @@
-import { useEffect, useState } from "react"
 import styled from "styled-components"
 import Cell from "./block/Cell";
 import useStage from "../hooks/useStage";
+import usePlay from "../hooks/usePlay";
+
 
 export default function Game() {
-  const [position, setPosition] = useState({ x: 4, y: 0 });
+  const { position } = usePlay();
   const [stage] = useStage(position)
 
-  useEffect(()=>{
-    window.addEventListener("keydown", handleKey)
-    return () => {
-      window.removeEventListener('keydown', handleKey);
-    };
-  },[])
 
-  const handleKey = (e : KeyboardEvent): void => {
-    if (e.code === "ArrowLeft") { // 왼쪽 화살표
-      setPosition((prev) => ({ ...prev, x: prev.x - 1 }));
-    } else if (e.code === "ArrowRight") { // 오른쪽 화살표
-      setPosition((prev) => ({ ...prev, x: prev.x + 1 }));
-    } else if (e.code === "ArrowDown") { // 아래 화살표
-      setPosition((prev) => ({ ...prev, y: prev.y + 1 }));
-    }
-  }
 
   return(
     <>
     <Container>
       <Padding>
-        {stage.map((line) => line.map((row, idx) => <Cell type={row} key={idx} /> ) )}
+        {stage.map((line) => line.map((row, idx) => <Cell type={row} key={idx} /> ))}
       </Padding>
     </Container>
     </>
