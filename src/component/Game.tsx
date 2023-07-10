@@ -1,22 +1,32 @@
+import { useEffect } from "react";
 import styled from "styled-components"
 import Cell from "./block/Cell";
 import useStage from "../hooks/useStage";
 import usePlay from "../hooks/usePlay";
-
+import { useInterval } from "../hooks/useInterval";
 
 export default function Game() {
-  const { position } = usePlay();
-  const [stage] = useStage(position)
+  const { position, handleKey, drop } = usePlay();
+  const {stage, block} = useStage(position);
 
+  useEffect(()=>{
+    window.addEventListener("keydown", handleKey)
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+    };
+  },[])
 
+  useInterval(() => {
+    drop(stage, block)
+  }, 1000);
 
   return(
     <>
-    <Container>
-      <Padding>
-        {stage.map((line) => line.map((row, idx) => <Cell type={row} key={idx} /> ))}
-      </Padding>
-    </Container>
+      <Container>
+        <Padding>
+          {stage.map((line) => line.map((row, idx) => <Cell type={row} key={idx} /> ))}
+        </Padding>
+      </Container>
     </>
   )
 }

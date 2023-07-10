@@ -8,7 +8,7 @@ type Position = {
 
 export default function useStage(position: Position) {
   const [stage, setStage] = useState<number[][]>(createStage())
-  const [block, setBlock] = useState(randomTetromino())
+  const [block, setBlock] = useState<any>(randomTetromino())
 
   useEffect(()=>{
     const heandleStage = (prevStage: number[][]): number[][] => {
@@ -25,9 +25,6 @@ export default function useStage(position: Position) {
           }
         });
       });
-
-      
-      console.log(s)
       
       return newStage;
     };
@@ -40,5 +37,5 @@ export default function useStage(position: Position) {
 
   },[position])
 
-  return [stage]
+  return {stage, block}
 }
