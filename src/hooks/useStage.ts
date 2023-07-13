@@ -25,17 +25,22 @@ export default function useStage(position: Position) {
           }
         });
       });
-      
       return newStage;
+
     };
-    const s = stage[stage.length -1].find(el => el === 1 )
-    if(s === 1){
+
+    //const s = stage[stage.length -1].find(el => el === 1 )
+    setStage((pre) => heandleStage(pre))
+    
+  },[position, block])
+  
+  const heandleBlock = (e) => {
+    if(e.code === "Space"){
+      console.log('asdasd')
+      setStage(stage)
       setBlock(randomTetromino());
     }
+  }
 
-    setStage((pre) => heandleStage(pre))
-
-  },[position])
-
-  return {stage, block}
+  return {stage, block, heandleBlock}
 }
