@@ -15,7 +15,7 @@ export default function usePlay() {
       };
     }
   }
-
+/* 
   const drop = (stage, block): boolean => {
     //console.log(stage, block)
     if(stage || position){
@@ -23,9 +23,9 @@ export default function usePlay() {
     }
     
     return false;
-  }
+  } */
 
   return {
-    position, handleKey, drop
+    position, handleKey
   }
 }
