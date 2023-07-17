@@ -6,7 +6,7 @@ import usePlay from "../hooks/usePlay";
 import { useInterval } from "../hooks/useInterval";
 
 export default function Game() {
-  const { position, handleKey } = usePlay();
+  const { position, handleKey, drop, handlePosition } = usePlay();
   const {stage, block, heandleBlock} = useStage(position);
 
   useEffect(()=>{
@@ -16,12 +16,16 @@ export default function Game() {
       window.removeEventListener('keydown', handleKey);
       window.removeEventListener('keydown', heandleBlock);
     };
-  },[])
+  },[position])
+
+  useEffect(()=>{
+    handlePosition(block)
+  },[block])
 
   
 
   useInterval(() => {
-    /* drop(stage, block) */
+    drop(stage, block)
   }, 1000);
 
   return(

@@ -10,23 +10,15 @@ export default function useStage(position: Position) {
   const [stage, setStage] = useState<number[][]>(createStage())
   const [baseStage, setBaseStage] = useState<number[][]>(createStage())
   const [block, setBlock] = useState<any>(randomTetromino())
-
-/*   const a = <T extends {}>(row:T[], y:T , cell:T, x:T): boolean => {
-    if (
-      (y == 19 && row[x])
-      ) {
-        return false;
-      }
-      return true;
-  } */
   
   useEffect(()=>{
     const heandleStage = (prevStage: number[][]): number[][] => {
       // 테트리스 판 생성
       const newStage = prevStage.map((row: number[]) =>
-        row.map((cell) => (cell ? 0 : cell))
+      row.map((cell) => (cell ? 0 : cell))
       );
       // 블록 생성
+
       block.shape.forEach((row: number[] , y: number) => {
         row.forEach((val, x) => {
           if (val !== 0) {
@@ -45,13 +37,23 @@ export default function useStage(position: Position) {
   const heandleBlock = (e: any) => {
     if(e.code === "Space"){
       //setStage(stage)
-      console.log(stage);
-      setBlock(randomTetromino());
+/*       console.log(stage);
+      setBlock(randomTetromino()); */
     }
-    setBaseStage(stage)
-    console.log(baseStage)
+/*     setBaseStage(stage)
+    console.log(baseStage) */
   }
-
 
   return {stage, block, heandleBlock}
 }
+
+const blockSize = (block) => {
+  let numX = 0
+  let numY = 0
+  for(let y = 0; block.shape.length > y; y++) {
+    for(let x = 0; block.shape[y].length > x; x++) {
+      //console.log(block.shape[y][x])
+    }
+  }
+}
+

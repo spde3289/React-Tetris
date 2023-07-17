@@ -10,18 +10,18 @@ type BlockType = {
 const TETROMINOS: TETROMINOS = {
   I: {
     shape: [
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 0, 0],
-      [1, 0, 0]
+      [1],
+      [1],
+      [1],
+      [1]
     ],
     color: "80, 227, 230"
   },
   J: {
     shape: [
-      [0, 1, 0],
-      [0, 1, 0],
-      [1, 1, 0]
+      [0, 1],
+      [0, 1],
+      [1, 1]
     ],
     color: "36, 95, 223"
   },
@@ -44,7 +44,6 @@ const TETROMINOS: TETROMINOS = {
     shape: [
       [0, 1, 1],
       [1, 1, 0],
-      [0, 0, 0]
     ],
     color: "48, 211, 56"
   },
@@ -58,8 +57,7 @@ const TETROMINOS: TETROMINOS = {
   Z: {
     shape: [
       [1, 1, 0],
-      [0, 1, 1],
-      [0, 0, 0]
+      [0, 1, 1]
     ],
     color: "227, 78, 78"
   }
