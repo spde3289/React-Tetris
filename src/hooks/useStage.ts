@@ -8,7 +8,6 @@ type Position = {
 
 export default function useStage(position: Position) {
   const [stage, setStage] = useState<number[][]>(createStage())
-  const [baseStage, setBaseStage] = useState<number[][]>(createStage())
   const [block, setBlock] = useState<any>(randomTetromino())
   
   useEffect(()=>{
@@ -47,13 +46,5 @@ export default function useStage(position: Position) {
   return {stage, block, heandleBlock}
 }
 
-const blockSize = (block) => {
-  let numX = 0
-  let numY = 0
-  for(let y = 0; block.shape.length > y; y++) {
-    for(let x = 0; block.shape[y].length > x; x++) {
-      //console.log(block.shape[y][x])
-    }
-  }
-}
+
 

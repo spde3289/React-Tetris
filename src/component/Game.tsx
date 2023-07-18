@@ -7,7 +7,7 @@ import { useInterval } from "../hooks/useInterval";
 
 export default function Game() {
   const { position, handleKey, drop, handlePosition } = usePlay();
-  const {stage, block, heandleBlock} = useStage(position);
+  const { stage, block, heandleBlock } = useStage(position);
 
   useEffect(()=>{
     window.addEventListener("keydown", handleKey)
@@ -25,7 +25,7 @@ export default function Game() {
   
 
   useInterval(() => {
-    drop(stage, block)
+    drop()
   }, 1000);
 
   return(
