@@ -21,6 +21,6 @@ const Container = styled.div`
   align-content: center;
   align-items: center;
   flex-direction: row;
-`
+`;
 
 export default App

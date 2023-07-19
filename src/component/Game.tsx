@@ -22,8 +22,6 @@ export default function Game() {
     handlePosition(block)
   },[block])
 
-  
-
   useInterval(() => {
     drop()
   }, 1000);

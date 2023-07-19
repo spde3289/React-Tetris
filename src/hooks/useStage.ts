@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { createStage } from "../createStage"
-import { randomTetromino } from "../component/block/block"
+import { randomTetromino, BlockType } from "../component/block/block"
 
 type Position = {
   [key: string]: number
@@ -8,7 +8,7 @@ type Position = {
 
 export default function useStage(position: Position) {
   const [stage, setStage] = useState<number[][]>(createStage())
-  const [block, setBlock] = useState<any>(randomTetromino())
+  const [block, setBlock] = useState<BlockType>(randomTetromino())
   
   useEffect(()=>{
     const heandleStage = (prevStage: number[][]): number[][] => {
@@ -17,7 +17,6 @@ export default function useStage(position: Position) {
       row.map((cell) => (cell ? 0 : cell))
       );
       // 블록 생성
-
       block.shape.forEach((row: number[] , y: number) => {
         row.forEach((val, x) => {
           if (val !== 0) {
@@ -25,22 +24,23 @@ export default function useStage(position: Position) {
           }
         });
       });
-
       return newStage;
     };
-
     setStage((pre) => heandleStage(pre))
-    
   },[position, block])
-  
+
   const heandleBlock = (e: any) => {
-    if(e.code === "Space"){
-      //setStage(stage)
-/*       console.log(stage);
-      setBlock(randomTetromino()); */
+    const arr: number[][] = [];
+    if (e.code === "ArrowUp") {
+      for (let i = 0; block.shape[0].length > i; i++) {
+        const arr1: number[] = []; 
+        for (var j = 0; block.shape.length > j; j++) {
+          arr1.push(block.shape[j][i] === 1 ? 1 : 0);
+        }
+        arr.unshift(arr1);
+      }
     }
-/*     setBaseStage(stage)
-    console.log(baseStage) */
+    setBlock((pre)=> ({ ...pre, shape: arr}))
   }
 
   return {stage, block, heandleBlock}

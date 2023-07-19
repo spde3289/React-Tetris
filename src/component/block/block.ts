@@ -1,8 +1,8 @@
-interface TETROMINOS {
+export interface TETROMINOS {
   [key: string]: BlockType
 }
 
-type BlockType = {
+export type BlockType = {
   shape: number[][],
   color: string
 }
