@@ -1,36 +1,37 @@
 import { useEffect } from "react";
-import styled from "styled-components"
+import styled from "styled-components";
 import Cell from "./block/Cell";
 import useStage from "../hooks/useStage";
 import usePlay from "../hooks/usePlay";
 import { useInterval } from "../hooks/useInterval";
+import { STAGE_WIDTH, STAGE_HEIGHT } from "../createStage";
 
 export default function Game() {
   const { position, handleKey, drop, handlePosition } = usePlay();
   const { stage, block, heandleBlock } = useStage(position);
 
   useEffect(()=>{
-    window.addEventListener("keydown", handleKey)
-    window.addEventListener("keydown", heandleBlock)
+    window.addEventListener("keyup", handleKey);
+    window.addEventListener("keyup", heandleBlock);
     return () => {
-      window.removeEventListener('keydown', handleKey);
-      window.removeEventListener('keydown', heandleBlock);
+      window.removeEventListener('keyup', handleKey);
+      window.removeEventListener('keyup', heandleBlock);
     };
-  },[position])
+  },[position, block]);
 
   useEffect(()=>{
-    handlePosition(block)
-  },[block])
+    handlePosition(block);
+  },[block]);
 
   useInterval(() => {
-    drop()
+    drop();
   }, 1000);
 
   return(
     <>
       <Container>
         <Padding>
-          {stage.map((line) => line.map((row, idx) => <Cell type={row} key={idx} /> ))}
+          {stage.map((line) => line.map((row, idx) => <Cell type={row} key={idx} />))}
         </Padding>
       </Container>
     </>
@@ -48,8 +49,8 @@ const Container = styled.div`
 
 const Padding = styled.div`
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  grid-template-rows: repeat(20, 1fr);
+  grid-template-columns: repeat(${STAGE_WIDTH}, 1fr);
+  grid-template-rows: repeat(${STAGE_HEIGHT}, 1fr);
   grid-gap: 1px;
   border: 1px solid #fff;
 `;

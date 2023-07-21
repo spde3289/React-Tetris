@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react"
-import { createStage } from "../createStage"
-import { randomTetromino, BlockType } from "../component/block/block"
+import { useState, useEffect } from "react";
+import { createStage } from "../createStage";
+import { randomTetromino, BlockType } from "../component/block/block";
 
 type Position = {
-  [key: string]: number
-}
+  [key: string]: number;
+};
 
 export default function useStage(position: Position) {
-  const [stage, setStage] = useState<number[][]>(createStage())
-  const [block, setBlock] = useState<BlockType>(randomTetromino())
-  
+  const [stage, setStage] = useState<number[][]>(createStage());
+  const [block, setBlock] = useState<BlockType>(randomTetromino());
+
   useEffect(()=>{
     const heandleStage = (prevStage: number[][]): number[][] => {
       // 테트리스 판 생성
@@ -19,7 +19,7 @@ export default function useStage(position: Position) {
       // 블록 생성
       block.shape.forEach((row: number[] , y: number) => {
         row.forEach((val, x) => {
-          if (val !== 0) {
+          if(val !== 0) {
             newStage[y + position.y][x + position.x] = val;
           }
         });
@@ -31,20 +31,20 @@ export default function useStage(position: Position) {
 
   const heandleBlock = (e: any) => {
     const arr: number[][] = [];
-    if (e.code === "ArrowUp") {
-      for (let i = 0; block.shape[0].length > i; i++) {
+    if(e.code === "ArrowUp") {
+      for(let i = 0; block.shape[0].length > i; i++) {
         const arr1: number[] = []; 
-        for (var j = 0; block.shape.length > j; j++) {
+        for(var j = 0; block.shape.length > j; j++) {
           arr1.push(block.shape[j][i] === 1 ? 1 : 0);
-        }
+        };
         arr.unshift(arr1);
-      }
-    }
-    setBlock((pre)=> ({ ...pre, shape: arr}))
-  }
+      };
+      setBlock((pre)=> ({...pre, shape: arr}));
+    };
+  };
 
-  return {stage, block, heandleBlock}
-}
+  return {stage, block, heandleBlock};
+};
 
 
 
