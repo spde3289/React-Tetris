@@ -9,18 +9,18 @@ type Position = {
 export default function useStage(position: Position) {
   const [stage, setStage] = useState<number[][]>(createStage());
   const [block, setBlock] = useState<BlockType>(randomTetromino());
-
+  console.log(block)
   useEffect(()=>{
     const heandleStage = (prevStage: number[][]): number[][] => {
       // 테트리스 판 생성
-      const newStage = prevStage.map((row: number[]) =>
+      const newStage = prevStage.map((row: (number | BlockType)[]) =>
       row.map((cell) => (cell ? 0 : cell))
       );
       // 블록 생성
-      block.shape.forEach((row: number[] , y: number) => {
+      block.shape.forEach((row: (number | BlockType)[] , y: number) => {
         row.forEach((val, x) => {
           if(val !== 0) {
-            newStage[y + position.y][x + position.x] = val;
+            newStage[y + position.y][x + position.x] = [val, block.color];
           }
         });
       });

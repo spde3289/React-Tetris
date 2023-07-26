@@ -12,7 +12,7 @@ export default function usePlay() {
         ({ ...prev, x: 10 - maxPosition.x })
       );
     }
-  },[maxPosition])
+  },[maxPosition]);
   
   const handleKey = (e : any) => {
     console.log(maxPosition)
@@ -25,21 +25,21 @@ export default function usePlay() {
         (position.x + maxPosition.x >= STAGE_WIDTH ? prev : { ...prev, x: prev.x + 1 })
       );
     }else if (e.code === "ArrowDown") { // 아래 화살표
-      drop()
-    }
-  }
+      drop();
+    };
+  };
 
   const drop = () => {
-   /*  setPosition((prev) => 
+    setPosition((prev) => 
       (position.y + maxPosition.y >= STAGE_HEIGHT ? prev : { ...prev, y: prev.y + 1 })
-    ); */
-  }
+    );
+  };
 
   const handlePosition = (block: any) => {
     setMaxPosition({y: block.shape?.length, x: block.shape[0]?.length})
-  }
+  };
 
   return {
     position, handleKey, drop, handlePosition
-  }
-}
+  };
+};
