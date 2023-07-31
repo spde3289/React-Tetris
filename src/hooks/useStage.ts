@@ -7,14 +7,14 @@ type Position = {
 };
 
 export default function useStage(position: Position) {
-  const [stage, setStage] = useState<number[][]>(createStage());
+  const [stage, setStage] = useState<[number, string][][]>(createStage());
   const [block, setBlock] = useState<BlockType>(randomTetromino());
-  console.log(block)
+  console.log(stage)
   useEffect(()=>{
-    const heandleStage = (prevStage: number[][]): number[][] => {
+    const heandleStage = (prevStage: [number, string][][]): [number, string][][] => {
       // 테트리스 판 생성
-      const newStage = prevStage.map((row: (number | BlockType)[]) =>
-      row.map((cell) => (cell ? 0 : cell))
+      const newStage = prevStage.map((row: any[]) =>
+      row.map((cell) => (cell ? [0, "0, 0, 0"] : cell))
       );
       // 블록 생성
       block.shape.forEach((row: (number | BlockType)[] , y: number) => {

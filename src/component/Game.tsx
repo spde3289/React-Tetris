@@ -24,7 +24,7 @@ export default function Game() {
   },[block]);
 
   useInterval(() => {
-    //drop();
+    drop();
   }, 1000);
   
   return(
