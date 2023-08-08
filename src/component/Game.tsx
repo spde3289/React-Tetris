@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Cell from "./block/Cell";
 import useStage from "../hooks/useStage";
 import usePlay from "../hooks/usePlay";
+
 import { useInterval } from "../hooks/useInterval";
 import { STAGE_WIDTH, STAGE_HEIGHT } from "../createStage";
 
@@ -13,6 +14,7 @@ export default function Game() {
   useEffect(()=>{
     window.addEventListener("keyup", handleKey);
     window.addEventListener("keyup", heandleBlock);
+    handlePosition(block);
     return () => {
       window.removeEventListener('keyup', handleKey);
       window.removeEventListener('keyup', heandleBlock);
@@ -20,11 +22,10 @@ export default function Game() {
   },[position, block]);
 
   useEffect(()=>{
-    handlePosition(block);
   },[block]);
 
   useInterval(() => {
-    drop();
+    //drop();
   }, 1000);
   
   return(

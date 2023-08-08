@@ -1,6 +1,23 @@
 import { useState, useEffect } from "react";
 import { STAGE_WIDTH, STAGE_HEIGHT } from "../createStage";
 
+export const checkDuplicated = (
+    position: any,
+    tetromino: any[][],
+    render: any[][]
+) => {
+  return tetromino
+    .filter((row) => row.some((v) => v))
+    .some((row, rowIndex) =>
+      row.some((cell, columnIndex) => {
+        const findRender =
+          render?.[rowIndex + position.y]?.[columnIndex + position.x];
+      if (cell && findRender) return true;
+      else if (cell && findRender === undefined) return true;
+    })
+  );
+};
+
 export default function usePlay() {
 
   const [position, setPosition] = useState({ x: (STAGE_WIDTH / 2) - 1, y: 0 });
@@ -13,14 +30,14 @@ export default function usePlay() {
       );
     }
   },[maxPosition]);
+  console.log(position.x, maxPosition.x)
   
   const handleKey = (e : any) => {
-    console.log(maxPosition)
-    if(e.code === "ArrowLeft") { // 왼쪽 화살표
+    if (e.code === "ArrowLeft") { // 왼쪽 화살표
       setPosition((prev) => 
         (prev.x === 0 ? prev : { ...prev, x: prev.x - 1 }
       ));
-    }else if (e.code === "ArrowRight") { // 오른쪽 화살표
+    } else if (e.code === "ArrowRight") { // 오른쪽 화살표
       setPosition((prev) => 
         (position.x + maxPosition.x >= STAGE_WIDTH ? prev : { ...prev, x: prev.x + 1 })
       );

@@ -9,7 +9,7 @@ type Position = {
 export default function useStage(position: Position) {
   const [stage, setStage] = useState<[number, string][][]>(createStage());
   const [block, setBlock] = useState<BlockType>(randomTetromino());
-  console.log(stage)
+
   useEffect(()=>{
     const heandleStage = (prevStage: [number, string][][]): [number, string][][] => {
       // 테트리스 판 생성
@@ -30,17 +30,22 @@ export default function useStage(position: Position) {
   },[position, block])
 
   const heandleBlock = (e: any) => {
+    console.log(position, block.shape[0].length)
     const arr: number[][] = [];
-    if(e.code === "ArrowUp") {
-      for(let i = 0; block.shape[0].length > i; i++) {
-        const arr1: number[] = []; 
-        for(var j = 0; block.shape.length > j; j++) {
-          arr1.push(block.shape[j][i] === 1 ? 1 : 0);
-        };
-        arr.unshift(arr1);
-      };
-      setBlock((pre)=> ({...pre, shape: arr}));
-    };
+    if (e.code === "ArrowUp") {
+      if ((position.x + block.shape.length) <= 10) {
+          for(let i = 0; block.shape[0].length > i; i++) {
+            const arr1: number[] = []; 
+            for(var j = 0; block.shape.length > j; j++) {
+              arr1.push(block.shape[j][i] === 1 ? 1 : 0);
+            };
+            arr.unshift(arr1);
+          };
+          setBlock((pre)=> ({...pre, shape: arr}));
+      } else {
+        console.log('asd')
+      }
+    }
   };
 
   return {stage, block, heandleBlock};
