@@ -21,11 +21,8 @@ export default function Game() {
     };
   },[position, block]);
 
-  useEffect(()=>{
-  },[block]);
-
   useInterval(() => {
-    //drop();
+    drop();
   }, 1000);
   
   return(
