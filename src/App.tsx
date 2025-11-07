@@ -1,5 +1,5 @@
 function App() {
-  return <>테스트</>;
+  return <>빌드 해봄</>;
 }
 
 export default App;
