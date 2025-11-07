@@ -1,4 +1,4 @@
-name: CI
+name: CD
 
 on:
   push:
@@ -6,24 +6,28 @@ on:
       - main
 
 jobs:
-  # Build job
   build:
     name: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: yarn
+          cache: npm
+
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: npm ci
+
       - name: Lint Check
-        run: yarn lint
+        run: npm run lint
+
       - name: Build with Next.js
-        run: yarn build --profile
+        run: npm run build -- --profile
+
   deploy:
     needs: build
     name: deploy
@@ -39,7 +43,7 @@ jobs:
           fetch-depth: 0
 
       - name: Install Vercel CLI
-        run: npm i -g vercel@latest
+        run: npm install -g vercel@latest
 
       - name: Pull Vercel env (production)
         run: vercel pull --yes --environment=production --token "${VERCEL_TOKEN}"
