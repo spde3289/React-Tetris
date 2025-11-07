@@ -1,4 +1,4 @@
-name: Test build for PR check
+name: CI
 
 on:
   # Runs on pushes targeting the default branch
@@ -7,13 +7,10 @@ on:
       - develop
       - main
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-
 jobs:
   # Build job
   build:
+    name: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,7 +22,7 @@ jobs:
           cache: yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Build with Next.js
+      - name: Lint Check
         run: yarn lint
       - name: Build with Next.js
         run: yarn build --profile
