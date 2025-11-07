@@ -1,5 +1,5 @@
 function App() {
-  return <>이게 성공하면 진짜 된거임</>;
+  return <>테스트 버전 1.0.2</>;
 }
 
 export default App;
