@@ -3,8 +3,6 @@ name: CD
 on:
   release:
     types: [created]
-  workflow_dispatch:
-  repository_dispatch:
 
 jobs:
   build:
@@ -29,28 +27,28 @@ jobs:
       - name: Build with Next.js
         run: npm run build -- --profile
 
-  deploy:
-    needs: build
-    name: deploy
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
+  # deploy:
+  #   needs: build
+  #   name: deploy
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  #     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  #     VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         ref: main
+  #         fetch-depth: 0
 
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
+  #     - name: Install Vercel CLI
+  #       run: npm install -g vercel@latest
 
-      - name: Pull Vercel env (production)
-        run: vercel pull --yes --environment=production --token "${VERCEL_TOKEN}"
+  #     - name: Pull Vercel env (production)
+  #       run: vercel pull --yes --environment=production --token "${VERCEL_TOKEN}"
 
-      - name: Vercel build (production)
-        run: vercel build --prod --token "${VERCEL_TOKEN}"
+  #     - name: Vercel build (production)
+  #       run: vercel build --prod --token "${VERCEL_TOKEN}"
 
-      - name: Deploy to Vercel (Production, prebuilt)
-        run: vercel deploy --prebuilt --prod --token "${VERCEL_TOKEN}"
+  #     - name: Deploy to Vercel (Production, prebuilt)
+  #       run: vercel deploy --prebuilt --prod --token "${VERCEL_TOKEN}"

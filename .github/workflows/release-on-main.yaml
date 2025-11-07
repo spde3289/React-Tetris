@@ -1,4 +1,3 @@
-# .github/workflows/release-on-main.yml
 name: Release on main
 
 on:
