@@ -7,10 +7,6 @@ on:
       - develop
       - main
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: read
-
 jobs:
   # Build job
   build:
@@ -25,7 +21,7 @@ jobs:
           cache: yarn
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Build with Next.js
+      - name: Lint Check
         run: yarn lint
       - name: Build with Next.js
         run: yarn build --profile
