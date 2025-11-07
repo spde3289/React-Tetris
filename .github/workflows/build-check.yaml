@@ -1,4 +1,4 @@
-name: Test build for PR check
+name: CI
 
 on:
   # Runs on pushes targeting the default branch
@@ -10,6 +10,7 @@ on:
 jobs:
   # Build job
   build:
+    name: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
