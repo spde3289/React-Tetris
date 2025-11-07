@@ -1,0 +1,81 @@
+# .github/workflows/release-on-main.yml
+name: Release on main
+
+on:
+  push:
+    branches: [main] # PR 머지로 main에 push되면 실행
+
+permissions:
+  contents: write # 태그/릴리스 생성 권한 필요
+
+env:
+  NODE_VERSION: "20"
+  BUILD_DIR: ".dist"
+  ARTIFACT_NAME: "build-zip"
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build -- --profile
+
+      # 빌드 산출물을 zip으로 압축
+      - name: Archive build output
+        run: |
+          if [ ! -d "${{ env.BUILD_DIR }}" ]; then
+            echo "Build dir ${{ env.BUILD_DIR }} not found"; exit 1;
+          fi
+          zip -r build.zip "${{ env.BUILD_DIR }}"
+
+      # 다음 잡으로 전달할 아티팩트 업로드
+      - name: Upload artifact (build.zip)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: build.zip
+          if-no-files-found: error
+
+  release:
+    name: create tag & release
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: .
+
+      # package.json의 version을 태그로 사용 (v1.2.3 형식)
+      - name: Read version
+        id: pkg
+        run: echo "ver=v$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+
+      # softprops/action-gh-release가 tag가 없으면 자동으로 생성하며 릴리스도 함께 생성
+      - name: Create GitHub Release & upload asset
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.pkg.outputs.ver }}
+          name: Release ${{ steps.pkg.outputs.ver }}
+          body: "Automated release for ${{ github.sha }}"
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            build.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
