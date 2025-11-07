@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  # Runs on pushes targeting the default branch
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+  # Build job
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Lint Check
+        run: yarn lint
+      - name: Build with Next.js
+        run: yarn build --profile
