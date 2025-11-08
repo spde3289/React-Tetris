@@ -1,4 +1,5 @@
-name: Bump version
+name: Bump & Release
+
 on:
   push:
     branches:
@@ -8,18 +9,54 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # 태그 액션이 기존 태그/커밋을 올바르게 판단하려면 풀 히스토리가 좋아요
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: yarn
+
+      - name: Install deps
+        run: yarn --frozen-lockfile
+
+      # 1) 버전 증가 + 태그 생성/푸시
       - name: Bump version and push tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
         with:
+          # 가능하면 기본 제공 토큰을 쓰는 게 편합니다 (레포 권한: contents: write 필수)
           github_token: ${{ secrets.TOKEN }}
+          # 필요 시 옵션(예시)
+          # tag_prefix: "v"
+          # release_branches: "main"
+          # default_bump: "patch" # (conventional commits 안 쓰면 사용)
+          # dry_run: false
+
+      # 2) 빌드 (태그와 무관하지만, 산출물 이름에 태그를 쓰고 싶어서 태깅 뒤에 둡니다)
+      - name: Build
+        run: yarn build
+
+      # 3) 산출물 압축 (원하면 폴더 그대로 올려도 되지만 zip이 깔끔)
+      - name: Archive build
+        run: |
+          zip -r build-${{ steps.tag_version.outputs.new_tag }}.zip dist
+
+      # 4) 릴리즈 생성 + 빌드 파일 첨부
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
+          artifacts: build-${{ steps.tag_version.outputs.new_tag }}.zip
+          artifactContentType: raw
+          makeLatest: true
+          token: ${{ secrets.TOKEN }}
