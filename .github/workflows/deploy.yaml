@@ -1,51 +1,44 @@
-name: CD
+name: Deploy Release to Vercel (static)
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 
 jobs:
-  # Build job
-  build:
-    name: build
+  deploy:
     runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: yarn
-      - name: Install dependencies
-        run: yarn --frozen-lockfile
-      - name: Lint Check
-        run: yarn lint
-      - name: Build with Next.js
-        run: yarn build --profile
-  # deploy:
-  #   needs: build
-  #   name: deploy
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-  #     VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-  #     VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         ref: main
-  #         fetch-depth: 0
+      # 릴리즈 자산 ZIP 다운로드 (태그명 기준)
+      - name: Download release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          # 릴리즈 자산 이름 패턴에 맞춰 조정하세요 (예: build-v1.2.3.zip)
+          gh release download "$TAG" --pattern "build-$TAG.zip" --dir .
+          ls -al
 
-  #     - name: Install Vercel CLI
-  #       run: npm i -g vercel@latest
+      - name: Unzip build
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          unzip -o "build-$TAG.zip" -d extracted
+          test -d extracted/dist || (echo "dist/ not found" && exit 1)
+          ls -al extracted/dist
 
-  #     - name: Pull Vercel env (production)
-  #       run: vercel pull --yes --environment=production --token "${VERCEL_TOKEN}"
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
 
-  #     - name: Vercel build (production)
-  #       run: vercel build --prod --token "${VERCEL_TOKEN}"
-
-  #     - name: Deploy to Vercel (Production, prebuilt)
-  #       run: vercel deploy --prebuilt --prod --token "${VERCEL_TOKEN}"
+      - name: Deploy to Vercel (static directory)
+        run: |
+          vercel deploy extracted/dist \
+            --prod \
+            --yes --confirm \
+            --archive=tgz \
+            --token "$VERCEL_TOKEN" \
+            --org "$VERCEL_ORG_ID" \
+            --project "$VERCEL_PROJECT_ID"
