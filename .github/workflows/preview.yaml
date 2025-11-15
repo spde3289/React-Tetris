@@ -1,0 +1,28 @@
+name: Deploy Preview to Vercel
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+      - name: Pull Vercel env (production)
+        run: vercel pull --yes --environment=production --token "${VERCEL_TOKEN}"
+      - name: Vercel build (production)
+        run: vercel build --token "${VERCEL_TOKEN}"
+      - name: Deploy to Vercel (Production, prebuilt)
+        run: vercel deploy --prebuilt --token "${VERCEL_TOKEN}"
